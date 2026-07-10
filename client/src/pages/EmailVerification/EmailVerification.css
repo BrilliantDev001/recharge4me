@@ -1,0 +1,95 @@
+.ev-card {
+  text-align: center;
+}
+
+.ev-icon {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 96px;
+  height: 96px;
+  margin-inline: auto;
+  margin-bottom: var(--space-6);
+  border-radius: var(--radius-full);
+  background-color: #ede9fe;
+}
+
+.ev-icon__badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-bg-surface);
+  color: var(--color-info);
+  box-shadow: var(--shadow-sm);
+}
+
+.ev-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border-default);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+}
+
+.ev-badge svg {
+  color: var(--color-success);
+}
+
+.ev-cta {
+  width: 100%;
+}
+
+.ev-help {
+  margin-top: var(--space-5);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.ev-help a {
+  color: var(--color-brand-secondary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.ev-help a:hover {
+  color: var(--color-brand-secondary-hover);
+}
+
+.ev-divider {
+  width: 100%;
+  max-width: 440px;
+  margin: var(--space-8) auto 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.ev-divider::before,
+.ev-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: var(--color-border-default);
+}
+
+.ev-divider span {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-disabled);
+  white-space: nowrap;
+}

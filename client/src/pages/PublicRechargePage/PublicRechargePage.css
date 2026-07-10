@@ -1,0 +1,273 @@
+.prp-card {
+  width: 100%;
+  max-width: 420px;
+}
+
+.prp-profile {
+  text-align: center;
+  margin-bottom: var(--space-6);
+}
+
+.prp-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 88px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
+  box-shadow: var(--shadow-md);
+}
+
+.prp-name {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-1);
+}
+
+.prp-pro-badge {
+  display: inline-flex;
+  padding: 2px var(--space-2);
+  border-radius: var(--radius-full);
+  background-color: var(--color-success-bg);
+  color: var(--color-brand-primary);
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+}
+
+.prp-phone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.prp-username {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-disabled);
+  margin-top: var(--space-1);
+}
+
+.prp-form {
+  background-color: var(--color-bg-surface-alt);
+  border-radius: var(--radius-xl);
+  padding: var(--space-6);
+}
+
+.prp-form-label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.prp-network-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.prp-network-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-2);
+  border-radius: var(--radius-md);
+  border: 2px solid var(--color-border-default);
+  background-color: var(--color-bg-surface);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.prp-network-btn--active {
+  border-color: var(--color-brand-primary);
+  color: var(--color-brand-primary);
+}
+
+.prp-network-btn__logo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-sm);
+}
+
+.prp-segmented {
+  display: flex;
+  background-color: var(--color-bg-surface);
+  border-radius: var(--radius-full);
+  padding: 3px;
+  margin-bottom: var(--space-6);
+}
+
+.prp-segmented__btn {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.prp-segmented__btn--active {
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+}
+
+.prp-amount-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.prp-min-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-disabled);
+}
+
+.prp-amount-input {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background-color: var(--color-bg-surface);
+  border: 1.5px solid var(--color-border-default);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  margin-bottom: var(--space-2);
+}
+
+.prp-amount-input span {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-secondary);
+}
+
+.prp-amount-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.prp-amount-input--error {
+  border-color: var(--color-error);
+}
+
+.prp-amount-error {
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+  margin-bottom: var(--space-4);
+}
+
+.prp-preset-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+}
+
+.prp-preset-chip {
+  padding: var(--space-2);
+  border-radius: var(--radius-full);
+  border: 1.5px solid var(--color-border-default);
+  background-color: var(--color-bg-surface);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.prp-preset-chip--active {
+  border-color: var(--color-brand-primary);
+  color: var(--color-brand-primary);
+}
+
+.prp-recharge-btn {
+  width: 100%;
+  padding: var(--space-4);
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-4);
+  transition: background-color var(--transition-fast);
+}
+
+.prp-recharge-btn:hover:not(:disabled) {
+  background-color: var(--color-brand-primary-hover);
+}
+
+.prp-recharge-btn:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.prp-disclaimer {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-relaxed);
+  margin-bottom: var(--space-6);
+}
+
+.prp-trust-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.prp-trust-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.prp-trust-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-success-bg);
+  color: var(--color-brand-primary);
+  margin-bottom: var(--space-2);
+}
+
+.prp-trust-item__title {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.prp-trust-item__subtitle {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+}

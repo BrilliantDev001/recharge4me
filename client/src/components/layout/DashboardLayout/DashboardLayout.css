@@ -1,0 +1,199 @@
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-bg-page);
+}
+
+.dashboard-layout__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- MOBILE TOP BAR ---------- */
+.dashboard-topbar-mobile {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-4);
+  height: 60px;
+  padding-inline: var(--space-4);
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-default);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.dashboard-topbar-mobile__logo,
+.dashboard-topbar-mobile__spacer,
+.dashboard-topbar-mobile__back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-md);
+}
+
+.dashboard-topbar-mobile__logo {
+  background-color: var(--color-brand-secondary);
+  color: var(--color-text-inverse);
+}
+
+.dashboard-topbar-mobile__back {
+  color: var(--color-text-primary);
+}
+
+.dashboard-topbar-mobile__back:hover {
+  background-color: var(--color-bg-surface-alt);
+}
+
+.dashboard-topbar-mobile__spacer {
+  visibility: hidden;
+}
+
+.dashboard-topbar-mobile__label {
+  text-align: center;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---------- DESKTOP TOP BAR ---------- */
+/* .dashboard-topbar {
+  display: block;
+  flex-direction: row-reverse;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-6);
+  height: 76px;
+  padding-inline: var(--space-8);
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-default);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+} */
+
+.dashboard-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  height: 76px;
+  padding-inline: var(--space-8);
+  background-color: var(--color-bg-surface);
+  border-bottom: 1px solid var(--color-border-default);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+/* The .hide-mobile utility sets display:block at desktop widths,
+   which fights with this component's own display:flex at equal
+   specificity. Pinning it here with a compound selector guarantees
+   this rule always wins, regardless of CSS import order. */
+@media (min-width: 1024px) {
+  .dashboard-topbar.hide-mobile {
+    display: flex;
+  }
+}
+
+.dashboard-topbar__search {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  max-width: 420px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-surface-alt);
+  color: var(--color-text-secondary);
+}
+
+.dashboard-topbar__search input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+}
+
+.dashboard-topbar__search input::placeholder {
+  color: var(--color-text-disabled);
+}
+
+.dashboard-topbar__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.dashboard-topbar__icon-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+}
+
+.dashboard-topbar__icon-btn:hover {
+  background-color: var(--color-bg-surface-alt);
+  color: var(--color-text-primary);
+}
+
+.dashboard-topbar__notif-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-error);
+  border: 2px solid var(--color-bg-surface);
+}
+
+.dashboard-topbar__avatar-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1);
+  border-radius: var(--radius-full);
+  color: var(--color-text-secondary);
+}
+
+.dashboard-topbar__avatar-btn:hover {
+  background-color: var(--color-bg-surface-alt);
+}
+
+.dashboard-topbar__avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-brand-primary);
+  color: var(--color-text-inverse);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ---------- CONTENT ---------- */
+.dashboard-content {
+  flex: 1;
+  padding: var(--space-5) var(--space-4) calc(var(--space-8) + 64px);
+}
+
+@media (min-width: 1024px) {
+  .dashboard-content {
+    padding: var(--space-8);
+  }
+}

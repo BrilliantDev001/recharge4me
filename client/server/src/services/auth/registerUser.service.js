@@ -39,6 +39,11 @@ const registerUser = async (userData) => {
       phone: user.phone,
     },
   };
+
+  return {
+    message: "service reached successfully",
+  };
 };
 
 module.exports = registerUser;
+

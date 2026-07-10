@@ -1,4 +1,4 @@
-const registerUser = require("../../services/auth/registerUser.service");
+const { registerUser } = require("../../services/auth/registerUser.service");
 
 const registerUserController = async (req, res) => {
   try {
@@ -11,3 +11,4 @@ const registerUserController = async (req, res) => {
 };
 
 module.exports = registerUserController;
+
