@@ -1,5 +1,7 @@
 const User = require("../../models/user.model");
 const bcrypt = require("bcrypt");
+const { generateVerificationToken } = require("../../utils/generateToken");
+const { sendVerificationEmail } = require("../../utils/mailer");
 
 const registerUser = async (userData) => {
   const { name, username, email, phone, password } = userData;
@@ -29,8 +31,15 @@ const registerUser = async (userData) => {
     password: hashedPassword,
   });
 
+  const { rawToken, hashedToken, expiresAt } = generateVerificationToken();
+  user.emailVerificationToken = hashedToken;
+  user.emailVerificationExpires = expiresAt;
+  await user.save();
+
+  await sendVerificationEmail(user.email, user.name, rawToken);
+
   return {
-    message: "User registered successfully!",
+    message: "User registered successfully! Please check your email to verify your account.",
     user: {
       id: user._id,
       name: user.name,

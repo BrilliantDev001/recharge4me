@@ -26,7 +26,9 @@ const userSchema = new mongoose.Schema(
     password: { type: String, required: [true, "Password is required"] },
     profileMessage: { type: String, default: "Thanks for supporting me" },
     avatar: { type: String, default: "/images/default-avatar.png" },
-    isVerified: { type: Boolean, default: false },
+    isVerified: { type: Boolean, default: false, },
+    emailVerificationToken: { type: String, default: null, select: false },
+    emailVerificationExpires: { type: Date, default: null, select: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },
     rechargeLink: { isActive: { type: Boolean, default: true } },
     notificationPrefs: {
