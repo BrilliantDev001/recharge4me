@@ -29,6 +29,16 @@ export const registerUser = (payload) =>
   request("/auth/register", { method: "POST", body: payload, auth: false });
 export const loginUser = (payload) =>
   request("/auth/login", { method: "POST", body: payload, auth: false });
+export const verifyEmail = (token) =>
+  request(`/auth/verify-email?token=${encodeURIComponent(token)}`, {
+    auth: false,
+  });
+export const resendVerification = (email) =>
+  request("/auth/resend-verification", {
+    method: "POST",
+    body: { email },
+    auth: false,
+  });
 
 // ---------- Dashboard ----------
 export const getDashboardData = () => request("/dashboard");

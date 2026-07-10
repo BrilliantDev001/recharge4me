@@ -13,6 +13,10 @@
     color var(--transition-fast), transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
+.btn:hover {
+  background-color: var(--color-text-inverse);
+}
+
 .btn:active {
   transform: translateY(1px);
 }

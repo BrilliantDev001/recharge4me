@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import AuthLayout from '../../components/layout/AuthLayout/AuthLayout.jsx';
 import { useAuth } from "../../context/AuthContext.jsx";
+import { resendVerification } from "../../api/client.js";
 import TextField from '../../components/common/TextField/TextField.jsx';
 import Checkbox from '../../components/common/Checkbox/Checkbox.jsx';
 import Button from '../../components/common/Button/Button.jsx';
@@ -36,55 +37,57 @@ const INITIAL_FORM = {
 function Signup() {
   const { register } = useAuth();
   const [formData, setFormData] = useState(INITIAL_FORM);
+  const [resendState, setResendState] = useState("idle"); // 'idle' | 'sending' | 'sent'
   const [submitError, setSubmitError] = useState("");
-  const [agreedToTerms, setAgreedToTerms] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }))
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  }
+  };
 
   const validate = () => {
-    const nextErrors = {}
+    const nextErrors = {};
 
     if (!formData.fullName.trim()) {
-      nextErrors.fullName = 'Full name is required.'
+      nextErrors.fullName = "Full name is required.";
     }
 
     if (!formData.email.trim()) {
-      nextErrors.email = 'Email address is required.'
+      nextErrors.email = "Email address is required.";
     } else if (!EMAIL_REGEX.test(formData.email)) {
-      nextErrors.email = 'Enter a valid email address.'
+      nextErrors.email = "Enter a valid email address.";
     }
 
     if (!formData.phone.trim()) {
-      nextErrors.phone = 'Phone number is required.'
+      nextErrors.phone = "Phone number is required.";
     }
 
     if (!formData.password) {
-      nextErrors.password = 'Password is required.'
+      nextErrors.password = "Password is required.";
     } else if (formData.password.length < 8) {
-      nextErrors.password = 'Password must be at least 8 characters.'
+      nextErrors.password = "Password must be at least 8 characters.";
     }
 
     if (!formData.confirmPassword) {
-      nextErrors.confirmPassword = 'Please confirm your password.'
+      nextErrors.confirmPassword = "Please confirm your password.";
     } else if (formData.confirmPassword !== formData.password) {
-      nextErrors.confirmPassword = 'Passwords do not match.'
+      nextErrors.confirmPassword = "Passwords do not match.";
     }
 
     if (!agreedToTerms) {
-      nextErrors.terms = 'You must agree to the Terms of Service and Privacy Policy.'
+      nextErrors.terms =
+        "You must agree to the Terms of Service and Privacy Policy.";
     }
 
-    setErrors(nextErrors)
-    return Object.keys(nextErrors).length === 0
-  }
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,21 +117,68 @@ function Signup() {
         <div className="auth-card">
           <div className="auth-card__icon auth-card__icon--secondary">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path d="M5 13l4 4L19 7" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+              <path
+                d="M5 13l4 4L19 7"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
           <h1 className="auth-card__title">Account Created!</h1>
           <p className="auth-card__subtitle">
-            Welcome to Recharge4Me, {formData.fullName.split(' ')[0] || 'there'}. We've sent a
-            verification link to {formData.email || 'your email'} — confirm it to activate your
-            account.
+            Welcome to Recharge4Me, {formData.fullName.split(" ")[0] || "there"}
+            . We've sent a verification link to {formData.email || "your email"}{" "}
+            — confirm it to activate your account.
           </p>
-          <Button variant="secondary" size="lg" className="auth-card__submit" as="a" href="/verify-email">
-            I've Verified My Email
+          <Button
+            variant="secondary"
+            size="lg"
+            className="auth-card__submit"
+            as="a"
+            href="/login"
+          >
+            Go to Login
           </Button>
+
+          {resendState === "sent" ? (
+            <p
+              className="auth-card__subtitle"
+              style={{ color: "var(--color-success)", marginTop: "1rem" }}
+            >
+              Verification email resent — check your inbox.
+            </p>
+          ) : (
+            <button
+              type="button"
+              className="auth-card__link-btn"
+              style={{
+                marginTop: "1rem",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                color: "var(--color-primary)",
+              }}
+              disabled={resendState === "sending"}
+              onClick={async () => {
+                setResendState("sending");
+                try {
+                  await resendVerification(formData.email);
+                  setResendState("sent");
+                } catch {
+                  setResendState("idle");
+                }
+              }}
+            >
+              {resendState === "sending"
+                ? "Resending…"
+                : "Didn't get the email? Resend it"}
+            </button>
+          )}
         </div>
       </AuthLayout>
-    )
+    );
   }
 
   return (
