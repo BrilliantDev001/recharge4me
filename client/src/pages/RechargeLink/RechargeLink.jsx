@@ -7,6 +7,7 @@ import ConfirmDialog from '../../components/common/ConfirmDialog/ConfirmDialog.j
 import TrendChart from '../../components/common/TrendChart/TrendChart.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getMyLink, updateLinkSettings } from '../../api/client.js'
+import { getPublicLinkUrl, getPublicLinkDisplay } from "../../utils/link.js";
 import { LINK_QUICK_STATS_MOBILE, ENGAGEMENT_TIMELINE } from '../../data/dashboardContent.js'
 import './RechargeLink.css'
 
@@ -113,7 +114,7 @@ function RechargeLink() {
   ]
 
   const handleCopyLink = () => {
-    navigator.clipboard?.writeText(`https://${user?.linkUrl}`).catch(() => {})
+    navigator.clipboard?.writeText(getPublicLinkUrl(user?.username)).catch(() => {})
     setCopyState('copied')
     setTimeout(() => setCopyState('idle'), 2000)
   }
@@ -196,7 +197,7 @@ function RechargeLink() {
             </div>
 
             <div className="rl-url-row">
-              <span className="rl-url-row__text">https://{user?.linkUrl}</span>
+              <span className="rl-url-row__text">{getPublicLinkUrl(user?.username)}</span>
               <Button variant="secondary" size="md" onClick={handleCopyLink}>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '0.5rem' }}>
                   <rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.75" />
@@ -304,7 +305,7 @@ function RechargeLink() {
                   />
                 </svg>
               </span>
-              <span className="rl-mobile-url-row__text">{user?.linkUrl}</span>
+              <span className="rl-mobile-url-row__text">{getPublicLinkDisplay(user?.username)}</span>
               <button type="button" className="rl-mobile-url-row__copy" onClick={handleCopyLink} aria-label="Copy link">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <rect x="9" y="9" width="12" height="12" rx="2" stroke="currentColor" strokeWidth="1.5" />

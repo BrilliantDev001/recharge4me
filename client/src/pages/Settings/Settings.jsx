@@ -8,6 +8,7 @@ import ConfirmDialog from '../../components/common/ConfirmDialog/ConfirmDialog.j
 import ExpandableRow from '../../components/common/ExpandableRow/ExpandableRow.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getProfile, updateProfile, updateNotificationPrefs } from '../../api/client.js'
+import { getPublicLinkDisplay } from '../../utils/link.js'
 import { PROFILE_INFO, APP_LANGUAGE } from '../../data/dashboardContent.js'
 import './Settings.css'
 
@@ -427,7 +428,7 @@ function Settings() {
                   <Link to="/recharge-link" className="settings-link-row">
                     <div>
                       <p className="settings-link-row__title">Public Page Link</p>
-                      <p className="settings-link-row__subtitle">{user?.linkUrl}</p>
+                      <p className="settings-link-row__subtitle">{getPublicLinkDisplay(user?.username)}</p>
                     </div>
                     <span className="settings-badge settings-badge--verified">Active</span>
                   </Link>
@@ -594,7 +595,7 @@ function Settings() {
           </span>
           <div className="settings-mobile-toggle-row__text">
             <p className="settings-toggle-row__title">Public Page Link</p>
-            <p className="settings-toggle-row__subtitle">{user?.linkUrl}</p>
+            <p className="settings-toggle-row__subtitle">{getPublicLinkDisplay(user?.username)}</p>
           </div>
           <span className="settings-badge settings-badge--verified">Active</span>
         </Link>

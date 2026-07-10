@@ -5,6 +5,7 @@ import StatusPill from "../../components/common/StatusPill/StatusPill.jsx";
 import TrendChart from "../../components/common/TrendChart/TrendChart.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getDashboardData } from "../../api/client.js";
+import { getPublicLinkUrl, getPublicLinkDisplay } from "../../utils/link.js";
 import {
   QUICK_INSIGHTS,
   QUICK_ACTIONS,
@@ -168,12 +169,13 @@ function Dashboard() {
   const trendDataWeek = data?.trendDataWeek || [];
   const linkActivity = data?.linkActivity || { totalClicks: 0, isActive: true };
 
-  const handleCopyLink = () => {
-    // Real clipboard write — works even without a backend.
-    navigator.clipboard?.writeText(`https://${user?.linkUrl}`).catch(() => {});
-    setCopyState("copied");
-    setTimeout(() => setCopyState("idle"), 2000);
-  };
+ const handleCopyLink = () => {
+   navigator.clipboard
+     ?.writeText(getPublicLinkUrl(user?.username))
+     .catch(() => {});
+   setCopyState("copied");
+   setTimeout(() => setCopyState("idle"), 2000);
+ };
 
   return (
     <DashboardLayout
@@ -248,7 +250,9 @@ function Dashboard() {
               />
             </svg>
           </span>
-          <span className="db-hero__link-text">{user?.linkUrl}</span>
+          <span className="db-hero__link-text">
+            {getPublicLinkDisplay(user?.username)}
+          </span>
           <button
             type="button"
             className="db-hero__pill-btn"
@@ -362,7 +366,7 @@ function Dashboard() {
             <div className="db-linkcard__box">
               <div>
                 <p className="db-linkcard__url-label">Your Unique URL</p>
-                <p className="db-linkcard__url">{user?.linkUrl}</p>
+                <p className="db-linkcard__url">{getPublicLinkDisplay(user?.username)}</p>
               </div>
               <div className="db-linkcard__box-actions">
                 <button
