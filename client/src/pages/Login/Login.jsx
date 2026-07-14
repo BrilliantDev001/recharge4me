@@ -1,45 +1,45 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import AuthLayout from '../../components/layout/AuthLayout/AuthLayout.jsx';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import AuthLayout from "../../components/layout/AuthLayout/AuthLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import TextField from '../../components/common/TextField/TextField.jsx';
-import Checkbox from '../../components/common/Checkbox/Checkbox.jsx';
-import Button from '../../components/common/Button/Button.jsx';
-import '../../styles/shared/authCard.css';
-import './Login.css';
+import TextField from "../../components/common/TextField/TextField.jsx";
+import Checkbox from "../../components/common/Checkbox/Checkbox.jsx";
+import Button from "../../components/common/Button/Button.jsx";
+import "../../styles/shared/authCard.css";
+import "./Login.css";
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { login } = useAuth();
-  const [formData, setFormData] = useState({ email: '', password: '' })
-  const [rememberMe, setRememberMe] = useState(false)
-  const [errors, setErrors] = useState({})
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitError, setSubmitError] = useState('')
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   const handleChange = (field) => (e) => {
-    setFormData((prev) => ({ ...prev, [field]: e.target.value }))
+    setFormData((prev) => ({ ...prev, [field]: e.target.value }));
     // Clear the field's error as soon as the user starts correcting it
     if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }))
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
-  }
+  };
 
   const validate = () => {
-    const nextErrors = {}
+    const nextErrors = {};
     if (!formData.email.trim()) {
-      nextErrors.email = 'Email address is required.'
+      nextErrors.email = "Email address is required.";
     } else if (!EMAIL_REGEX.test(formData.email)) {
-      nextErrors.email = 'Enter a valid email address.'
+      nextErrors.email = "Enter a valid email address.";
     }
     if (!formData.password) {
-      nextErrors.password = 'Password is required.'
+      nextErrors.password = "Password is required.";
     }
-    setErrors(nextErrors)
-    return Object.keys(nextErrors).length === 0
-  }
+    setErrors(nextErrors);
+    return Object.keys(nextErrors).length === 0;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,8 +65,21 @@ function Login() {
       <div className="auth-card">
         <div className="auth-card__icon auth-card__icon--primary">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.75" />
-            <path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+            <rect
+              x="5"
+              y="11"
+              width="14"
+              height="9"
+              rx="2"
+              stroke="currentColor"
+              strokeWidth="1.75"
+            />
+            <path
+              d="M8 11V7a4 4 0 018 0v4"
+              stroke="currentColor"
+              strokeWidth="1.75"
+              strokeLinecap="round"
+            />
           </svg>
         </div>
 
@@ -78,8 +91,19 @@ function Login() {
         {submitError && (
           <div className="auth-card__error-banner" role="alert">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.75" />
-              <path d="M12 8v5M12 16h.01" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+              <circle
+                cx="12"
+                cy="12"
+                r="9"
+                stroke="currentColor"
+                strokeWidth="1.75"
+              />
+              <path
+                d="M12 8v5M12 16h.01"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+              />
             </svg>
             <span>{submitError}</span>
           </div>
@@ -91,13 +115,26 @@ function Login() {
             type="email"
             placeholder="name@example.com"
             value={formData.email}
-            onChange={handleChange('email')}
+            onChange={handleChange("email")}
             error={errors.email}
             autoComplete="email"
             icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M3 7l9 6 9-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <rect
+                  x="3"
+                  y="5"
+                  width="18"
+                  height="14"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M3 7l9 6 9-6"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </svg>
             }
           />
@@ -107,13 +144,26 @@ function Login() {
             isPassword
             placeholder="••••••••"
             value={formData.password}
-            onChange={handleChange('password')}
+            onChange={handleChange("password")}
             error={errors.password}
             autoComplete="current-password"
             icon={
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
-                <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.5" />
-                <path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                <rect
+                  x="5"
+                  y="11"
+                  width="14"
+                  height="9"
+                  rx="2"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                />
+                <path
+                  d="M8 11V7a4 4 0 018 0v4"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                />
               </svg>
             }
           />
@@ -149,15 +199,15 @@ function Login() {
               )
             }
           >
-            {isSubmitting ? 'Signing In…' : 'Sign In'}
+            {isSubmitting ? "Signing In…" : "Sign In"}
           </Button>
         </form>
 
-        <div className="auth-card__divider">
+        {/* <div className="auth-card__divider">
           <span>OR CONTINUE WITH</span>
-        </div>
+        </div> */}
 
-        <div className="auth-card__social-row">
+        {/* <div className="auth-card__social-row">
           <button type="button" className="auth-card__social-btn">
             <svg width="18" height="18" viewBox="0 0 24 24">
               <path
@@ -185,7 +235,7 @@ function Login() {
             </svg>
             GitHub
           </button>
-        </div>
+        </div> */}
 
         <p className="auth-card__footer-text">
           Don't have an account? <Link to="/signup">Create an account</Link>
@@ -196,21 +246,37 @@ function Login() {
         <div className="auth-card__trust-row">
           <span className="auth-card__trust-item">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <path d="M12 2l8 3v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V5l8-3z" stroke="currentColor" strokeWidth="1.75" />
+              <path
+                d="M12 2l8 3v6c0 5-3.4 8.4-8 10-4.6-1.6-8-5-8-10V5l8-3z"
+                stroke="currentColor"
+                strokeWidth="1.75"
+              />
             </svg>
             Secure SSL
           </span>
           <span className="auth-card__trust-item">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-              <rect x="5" y="11" width="14" height="9" rx="2" stroke="currentColor" strokeWidth="1.75" />
-              <path d="M8 11V7a4 4 0 018 0v4" stroke="currentColor" strokeWidth="1.75" />
+              <rect
+                x="5"
+                y="11"
+                width="14"
+                height="9"
+                rx="2"
+                stroke="currentColor"
+                strokeWidth="1.75"
+              />
+              <path
+                d="M8 11V7a4 4 0 018 0v4"
+                stroke="currentColor"
+                strokeWidth="1.75"
+              />
             </svg>
             Encrypted Data
           </span>
         </div>
       </div>
     </AuthLayout>
-  )
+  );
 }
 
-export default Login
+export default Login;

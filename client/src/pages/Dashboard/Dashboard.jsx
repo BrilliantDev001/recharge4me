@@ -169,13 +169,13 @@ function Dashboard() {
   const trendDataWeek = data?.trendDataWeek || [];
   const linkActivity = data?.linkActivity || { totalClicks: 0, isActive: true };
 
- const handleCopyLink = () => {
-   navigator.clipboard
-     ?.writeText(getPublicLinkUrl(user?.username))
-     .catch(() => {});
-   setCopyState("copied");
-   setTimeout(() => setCopyState("idle"), 2000);
- };
+  const handleCopyLink = () => {
+    navigator.clipboard
+      ?.writeText(getPublicLinkUrl(user?.username))
+      .catch(() => {});
+    setCopyState("copied");
+    setTimeout(() => setCopyState("idle"), 2000);
+  };
 
   return (
     <DashboardLayout
@@ -366,7 +366,9 @@ function Dashboard() {
             <div className="db-linkcard__box">
               <div>
                 <p className="db-linkcard__url-label">Your Unique URL</p>
-                <p className="db-linkcard__url">{getPublicLinkDisplay(user?.username)}</p>
+                <p className="db-linkcard__url">
+                  {getPublicLinkDisplay(user?.username)}
+                </p>
               </div>
               <div className="db-linkcard__box-actions">
                 <button
@@ -512,7 +514,7 @@ function Dashboard() {
                   Latest contributions to your balance
                 </p>
               </div>
-              <a href="#" className="db-table-card__view-all">
+              <a href="/transactions" className="db-table-card__view-all">
                 View All Transactions
               </a>
             </div>
