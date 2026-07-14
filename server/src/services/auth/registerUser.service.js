@@ -3,8 +3,17 @@ const bcrypt = require("bcrypt");
 const { generateVerificationToken } = require("../../utils/generateToken");
 const { sendVerificationEmail } = require("../../utils/mailer");
 
-const registerUser = async (userData) => {
-  const { name, username, email, phone, password } = userData;
+const NIGERIAN_PHONE_REGEX = /^(0|\+234)[789][01]\d{8}$/;
+
+// const registerUser = async (userData) => {
+//   const { name, username, email, phone, password } = userData;
+
+  const registerUser = async (registerData) => {
+  const { name, username, email, phone, password } = registerData;
+
+  if (!NIGERIAN_PHONE_REGEX.test(phone)) {
+    throw new Error("Please enter a valid Nigerian phone number (e.g. 08011111111).");
+  }
 
   const existingUsername = await User.findOne({ username });
   if (existingUsername) {

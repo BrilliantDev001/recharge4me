@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const User = require("../../models/user.model");
 const RechargeLink = require("../../models/rechargeLink.model");
 const Transaction = require("../../models/transaction.model");
+const { initializeTransaction } = require("../../utils/paystack");
 
 const MIN_RECHARGE_AMOUNT = 100;
 
@@ -26,8 +27,12 @@ const submitRecharge = async (username, payload) => {
     throw new Error("This recharge link does not exist.");
   }
 
-  const link = await RechargeLink.findOne({ user: user._id });
-  if (!link || !link.isActive) {
+  const link = await RechargeLink.findOneAndUpdate(
+    { user: user._id },
+    {},
+    { upsert: true, new: true, setDefaultsOnInsert: true },
+  );
+  if (!link.isActive) {
     throw new Error("This recharge link is currently inactive.");
   }
 
@@ -41,10 +46,7 @@ const submitRecharge = async (username, payload) => {
     throw new Error("This user requires sponsors to identify themselves.");
   }
 
-  // NOTE: payment gateway + telco delivery are stubbed for MVP — simulated
-  // as an instant success. Swap this block for a real charge + delivery
-  // call later; everything downstream (record, receipt) stays the same.
-  const status = "success";
+  const reference = generateReference();
 
   const transaction = await Transaction.create({
     recipient: user._id,
@@ -58,21 +60,24 @@ const submitRecharge = async (username, payload) => {
     quantity: numericAmount,
     quantityUnit: "NGN",
     valueNaira: numericAmount,
-    status,
-    reference: generateReference(),
+    status: "pending",
+    reference,
   });
 
-  link.lastActivityAt = new Date();
-  await link.save();
+  // NOTE: placeholder email — no sponsor-email field on the public page
+  // yet. Fine for processing the payment; just means no receipt email.
+  const placeholderEmail = `sponsor+${reference}@example.com`;
+
+  const { authorization_url } = await initializeTransaction({
+    email: placeholderEmail,
+    amountNaira: numericAmount,
+    reference,
+    callbackUrl: `${process.env.CLIENT_URL}/payment-success?reference=${reference}`,
+  });
 
   return {
     reference: transaction.reference,
-    status: transaction.status,
-    amount: transaction.valueNaira,
-    network: transaction.network,
-    type: transaction.type,
-    recipientName: user.name,
-    date: transaction.createdAt,
+    authorizationUrl: authorization_url,
   };
 };
 

@@ -56,20 +56,12 @@ function PublicRechargePage() {
         isAnonymous: true, // no sponsor-name field on this page yet — deferred
       })
 
-      navigate('/payment-success', {
-        state: {
-          amount: result.amount,
-          network: result.network,
-          rechargeType,
-          recipientName: result.recipientName,
-          recipientPhone: linkData?.phone,
-          sentBy: 'Anonymous Sponsor',
-          txnId: result.reference,
-        },
-      })
+      // Full browser redirect (not a React route) — Paystack's checkout
+      // is hosted on their own domain. They'll redirect back to
+      // /payment-success?reference=... once the sponsor pays.
+      window.location.href = result.authorizationUrl
     } catch (error) {
       setAmountError(error.message)
-    } finally {
       setIsProcessing(false)
     }
   }

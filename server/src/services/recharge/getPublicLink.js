@@ -10,7 +10,11 @@ const getPublicLink = async (username) => {
     throw new Error("This recharge link does not exist.");
   }
 
-  const link = await RechargeLink.findOne({ user: user._id });
+  const link = await RechargeLink.findOneAndUpdate(
+    { user: user._id },
+    {},
+    { upsert: true, new: true, setDefaultsOnInsert: true },
+  );
 
   if (!link || !link.isActive) {
     throw new Error("This recharge link is currently inactive.");

@@ -55,6 +55,8 @@ export const submitRecharge = (username, payload) =>
     body: payload,
     auth: false,
   });
+export const verifyPayment = (reference) =>
+  request(`/transactions/verify/${reference}`, { auth: false });
 
 // ---------- Transactions ----------
 export const getTransactions = (params = {}) => {

@@ -19,12 +19,26 @@ const transactionSchema = new mongoose.Schema(
     quantity: { type: Number, required: true },
     quantityUnit: { type: String, enum: ["NGN", "GB"], required: true },
     valueNaira: { type: Number, required: true },
+
+    // Overall status shown to the user.
+    // pending -> payment_failed
+    // pending -> paid -> success
+    // pending -> paid -> delivery_failed (money collected, VTpass delivery failed)
     status: {
       type: String,
-      enum: ["success", "pending", "failed"],
+      enum: ["pending", "paid", "success", "payment_failed", "delivery_failed"],
       default: "pending",
     },
+
     reference: { type: String, required: true, unique: true },
+
+    // ---------- Payment leg (Paystack) ----------
+    paystackVerifiedAt: { type: Date, default: null },
+
+    // ---------- Delivery leg (VTpass) ----------
+    vtpassRequestId: { type: String, default: null },
+    vtpassStatus: { type: String, default: null }, // raw status VTpass returns
+    deliveredAt: { type: Date, default: null },
   },
   { timestamps: true },
 );
