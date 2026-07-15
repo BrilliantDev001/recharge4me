@@ -6,6 +6,7 @@ import TrendChart from "../../components/common/TrendChart/TrendChart.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getDashboardData } from "../../api/client.js";
 import { getPublicLinkUrl, getPublicLinkDisplay } from "../../utils/link.js";
+import QrCodeModal from "../../components/common/QrCodeModal/QrCodeModal.jsx";
 import {
   QUICK_INSIGHTS,
   QUICK_ACTIONS,
@@ -153,6 +154,7 @@ function Dashboard() {
   const { user } = useAuth();
   const [copyState, setCopyState] = useState("idle"); // 'idle' | 'copied'
   const [data, setData] = useState(null);
+  const [isQrOpen, setIsQrOpen] = useState(false);
 
   useEffect(() => {
     getDashboardData()
@@ -276,7 +278,11 @@ function Dashboard() {
             </svg>
             {copyState === "copied" ? "Copied!" : "Copy Link"}
           </button>
-          <button type="button" className="db-hero__pill-btn">
+          <button
+            type="button"
+            className="db-hero__pill-btn"
+            onClick={() => setIsQrOpen(true)}
+          >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
               <rect
                 x="3"
@@ -394,11 +400,7 @@ function Dashboard() {
                     />
                   </svg>
                 </button>
-                <button
-                  type="button"
-                  className="db-linkcard__icon-btn"
-                  aria-label="Show QR code"
-                >
+                <button type="button" className="db-linkcard__icon-btn" onClick={() => setIsQrOpen(true)} aria-label="Show QR code">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <rect
                       x="3"
@@ -693,7 +695,13 @@ function Dashboard() {
                   key={action.id}
                   type="button"
                   className="db-quick-action-tile"
-                  onClick={action.id === "qa-copy" ? handleCopyLink : undefined}
+                  onClick={
+                    action.id === 'qa-copy'
+                      ? handleCopyLink
+                      : action.id === 'qa-qr'
+                        ? () => setIsQrOpen(true)
+                        : undefined
+                  }
                 >
                   <span className="db-quick-action-tile__icon">
                     {QUICK_ACTION_ICONS[action.icon]}
@@ -740,6 +748,10 @@ function Dashboard() {
           <a href="#">Privacy Policy</a>
         </div>
       </footer>
+
+      {isQrOpen && (
+        <QrCodeModal url={getPublicLinkUrl(user?.username)} onClose={() => setIsQrOpen(false)} />
+      )}
     </DashboardLayout>
   );
 }
