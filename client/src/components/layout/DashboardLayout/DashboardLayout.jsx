@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import BottomTabBar from "../BottomTabBar/BottomTabBar.jsx";
 import NotificationBell from "../../common/NotificationBell/NotificationBell.jsx";
-import AccountMenu from "../../common/AccountMenu/AccountMenu.JSX";
+import AccountMenu from "../../common/AccountMenu/AccountMenu.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import "./DashboardLayout.css";
 
