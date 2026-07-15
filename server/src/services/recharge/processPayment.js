@@ -1,6 +1,7 @@
 const Transaction = require("../../models/transaction.model");
 const { verifyTransaction } = require("../../utils/paystack");
 const { purchaseAirtime } = require("../../utils/vtpass");
+const notifyRecharge = require("../notifications/createRechargeNotification");
 
 const VTPASS_SUCCESS_CODE = "000";
 
@@ -83,6 +84,16 @@ const processPaymentByReference = async (reference) => {
   }
 
   await transaction.save();
+
+  // Notify the recipient regardless of outcome — they should know
+  // either way. Wrapped so a notification/email hiccup never breaks
+  // the actual payment/delivery result already saved above.
+  try {
+    await notifyRecharge(transaction);
+  } catch (error) {
+    console.error("Failed to send recharge notification:", error.message);
+  }
+
   return transaction;
 };
 

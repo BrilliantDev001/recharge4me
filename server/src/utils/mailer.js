@@ -42,4 +42,39 @@ async function sendVerificationEmail(toEmail, name, rawToken) {
   }
 }
 
-module.exports = { sendVerificationEmail };
+async function sendRechargeNotificationEmail(toEmail, name, { amount, network, type, status }) {
+  const isSuccess = status === "success";
+
+  const subject = isSuccess
+    ? `You've received ₦${amount.toLocaleString()} in ${type.toLowerCase()}!`
+    : "There was an issue delivering your recharge";
+
+  const bodyMessage = isSuccess
+    ? `Good news! Someone just sent you ₦${amount.toLocaleString()} worth of ${network} ${type.toLowerCase()} through your Recharge4Me link. It's already been delivered to your line.`
+    : `A sponsor's payment of ₦${amount.toLocaleString()} for ${network} ${type.toLowerCase()} was received, but we ran into an issue delivering it automatically. Our team has been notified and will resolve this shortly.`;
+
+  try {
+    await brevoClient.post("/smtp/email", {
+      sender: {
+        name: process.env.BREVO_SENDER_NAME || "Recharge4Me",
+        email: process.env.BREVO_SENDER_EMAIL,
+      },
+      to: [{ email: toEmail, name }],
+      subject,
+      htmlContent: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="color: ${isSuccess ? "#10b981" : "#ef4444"};">Hi ${name},</h2>
+          <p>${bodyMessage}</p>
+          <p style="color:#666; font-size:14px; margin-top: 24px;">
+            You can review this and all your recharges anytime in your
+            <a href="${process.env.CLIENT_URL}/transactions">Recharge4Me dashboard</a>.
+          </p>
+        </div>
+      `,
+    });
+  } catch (error) {
+    console.error("Failed to send recharge notification email:", error.response?.data || error.message);
+  }
+}
+
+module.exports = { sendVerificationEmail, sendRechargeNotificationEmail };

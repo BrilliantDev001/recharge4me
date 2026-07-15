@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar/Sidebar.jsx";
 import BottomTabBar from "../BottomTabBar/BottomTabBar.jsx";
+import NotificationBell from "../../common/NotificationBell/NotificationBell.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import "./DashboardLayout.css";
 
@@ -88,37 +89,16 @@ function DashboardLayout({
           </div>
 
           <div className="dashboard-topbar__actions">
-            <button
-              type="button"
-              className="dashboard-topbar__icon-btn"
-              aria-label="Notifications"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M6 9a6 6 0 1112 0c0 5 2 6 2 6H4s2-1 2-6z"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinejoin="round"
-                />
-                <path
-                  d="M10 20a2 2 0 004 0"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                />
-              </svg>
-              <span
-                className="dashboard-topbar__notif-dot"
-                aria-hidden="true"
-              />
-            </button>
+            <NotificationBell />
 
             <button
               type="button"
               className="dashboard-topbar__avatar-btn"
               aria-label="Account menu"
             >
-              <span className="dashboard-topbar__avatar">{user?.name?.charAt(0)}</span>
+              <span className="dashboard-topbar__avatar">
+                {user?.name?.charAt(0)}
+              </span>
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M6 9l6 6 6-6"

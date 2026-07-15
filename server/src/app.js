@@ -5,6 +5,7 @@ const rechargeRoutes = require("./routes/recharge.routes");
 const transactionRoutes = require("./routes/transaction.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const settingsRoutes = require("./routes/settings.routes");
+const notificationRoutes = require("./routes/notification.routes");
 const paystackWebhookController = require("./controllers/webhooks/paystackWebhook.controller");
 
 const app = express();
@@ -36,5 +37,6 @@ app.use("/api/recharge", rechargeRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/settings", settingsRoutes);
+app.use("/api/notifications", notificationRoutes);
 
 module.exports = app;

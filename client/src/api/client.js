@@ -66,8 +66,11 @@ export const getTransactions = (params = {}) => {
 export const getTransactionStats = () => request("/transactions/stats");
 
 // ---------- Settings ----------
-export const getProfile = () => request("/settings/profile");
-export const updateProfile = (payload) =>
-  request("/settings/profile", { method: "PATCH", body: payload });
-export const updateNotificationPrefs = (payload) =>
-  request("/settings/notifications", { method: "PATCH", body: payload });
+export const getProfile = () => request('/settings/profile')
+export const updateProfile = (payload) => request('/settings/profile', { method: 'PATCH', body: payload })
+export const updateNotificationPrefs = (payload) => request('/settings/notifications', { method: 'PATCH', body: payload })
+
+// ---------- Notifications ----------
+export const getNotifications = () => request('/notifications')
+export const markNotificationRead = (id) => request(`/notifications/${id}/read`, { method: 'PATCH' })
+export const markAllNotificationsRead = () => request('/notifications/all/read', { method: 'PATCH' })
