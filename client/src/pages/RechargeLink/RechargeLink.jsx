@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout/DashboardLayout.jsx'
 import Switch from '../../components/common/Switch/Switch.jsx'
 import Button from '../../components/common/Button/Button.jsx'
@@ -8,6 +8,7 @@ import TrendChart from '../../components/common/TrendChart/TrendChart.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getMyLink, updateLinkSettings } from '../../api/client.js'
 import { getPublicLinkUrl, getPublicLinkDisplay } from "../../utils/link.js";
+import { QRCodeCanvas } from "qrcode.react";
 import { LINK_QUICK_STATS_MOBILE, ENGAGEMENT_TIMELINE } from '../../data/dashboardContent.js'
 import './RechargeLink.css'
 
@@ -49,9 +50,7 @@ const STAT_ICONS = {
 }
 
 function QrGraphic({ size = 96 }) {
-  // Simple decorative QR-like pattern — a real QR code needs the
-  // actual link encoded, which will come from a QR library once
-  // this connects to a backend. Placeholder keeps visual fidelity.
+  // real QR codes render via QRCodeCanvas below
   return (
     <svg width={size} height={size} viewBox="0 0 100 100" fill="none">
       <rect width="100" height="100" fill="var(--color-bg-surface)" />
@@ -82,6 +81,29 @@ function RechargeLink() {
   const [isRegenerateDialogOpen, setIsRegenerateDialogOpen] = useState(false)
   const [isRegenerating, setIsRegenerating] = useState(false)
   const [regenerateDone, setRegenerateDone] = useState(false)
+
+  const desktopQrRef = useRef(null)
+  const mobileQrRef = useRef(null)
+
+  const downloadQrCode = (containerRef) => {
+    const canvas = containerRef.current?.querySelector('canvas')
+    if (!canvas) return
+    const link = document.createElement('a')
+    link.download = 'recharge4me-qr-code.png'
+    link.href = canvas.toDataURL('image/png')
+    link.click()
+  }
+
+  const handleShareLink = () => {
+    const url = getPublicLinkUrl(user?.username)
+    if (navigator.share) {
+      navigator.share({ title: 'My Recharge4Me Link', url }).catch(() => {})
+    } else {
+      navigator.clipboard?.writeText(url).catch(() => {})
+      setCopyState('copied')
+      setTimeout(() => setCopyState('idle'), 2000)
+    }
+  }
 
   useEffect(() => {
     getMyLink()
@@ -334,12 +356,12 @@ function RechargeLink() {
 
           {/* ===================== MOBILE QR SECTION ===================== */}
           <section className="rl-mobile-qr hide-desktop">
-            <div className="rl-mobile-qr__code">
-              <QrGraphic size={140} />
+            <div className="rl-mobile-qr__code" ref={mobileQrRef}>
+              <QRCodeCanvas value={getPublicLinkUrl(user?.username)} size={140} level="M" includeMargin />
             </div>
             <p className="rl-mobile-qr__label">Personal QR Code</p>
             <div className="rl-mobile-qr__actions">
-              <button type="button" className="rl-mobile-qr__action">
+              <button type="button" className="rl-mobile-qr__action" onClick={handleShareLink}>
                 <span className="rl-mobile-qr__action-icon">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                     <circle cx="6" cy="12" r="2.5" stroke="currentColor" strokeWidth="1.5" />
@@ -364,7 +386,7 @@ function RechargeLink() {
                 </span>
                 Link
               </button>
-              <button type="button" className="rl-mobile-qr__action">
+              <button type="button" className="rl-mobile-qr__action" onClick={() => downloadQrCode(mobileQrRef)}>
                 <span className="rl-mobile-qr__action-icon">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
                     <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 17v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
@@ -452,23 +474,15 @@ function RechargeLink() {
           <div className="rl-rail-card">
             <h3 className="rl-rail-card__title">Share via QR Code</h3>
             <p className="rl-rail-card__subtitle">Perfect for social bios or printed materials.</p>
-            <div className="rl-rail-qr">
-              <QrGraphic size={160} />
+            <div className="rl-rail-qr" ref={desktopQrRef}>
+              <QRCodeCanvas value={getPublicLinkUrl(user?.username)} size={160} level="M" includeMargin />
             </div>
-            <Button variant="outline" size="md" className="rl-rail-qr__download">
+            <Button variant="outline" size="md" className="rl-rail-qr__download" onClick={() => downloadQrCode(desktopQrRef)}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{ marginRight: '0.5rem' }}>
                 <path d="M12 3v12m0 0l-4-4m4 4l4-4M5 17v2a2 2 0 002 2h10a2 2 0 002-2v-2" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               Download QR
             </Button>
-            <a href="#" className="rl-rail-qr__generate">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <rect x="3" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
-                <rect x="14" y="3" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
-                <rect x="3" y="14" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.5" />
-              </svg>
-              Generate Custom QR
-            </a>
           </div>
         </aside>
       </div>
