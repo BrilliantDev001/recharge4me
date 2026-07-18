@@ -77,4 +77,30 @@ async function sendRechargeNotificationEmail(toEmail, name, { amount, network, t
   }
 }
 
-module.exports = { sendVerificationEmail, sendRechargeNotificationEmail };
+async function sendSupportRequestEmail({ name, email, subject, message }) {
+  try {
+    await brevoClient.post("/smtp/email", {
+      sender: {
+        name: process.env.BREVO_SENDER_NAME || "Recharge4Me",
+        email: process.env.BREVO_SENDER_EMAIL,
+      },
+      to: [{ email: process.env.SUPPORT_INBOX_EMAIL, name: "Recharge4Me Support" }],
+      replyTo: { email, name },
+      subject: `[Support] ${subject}`,
+      htmlContent: `
+        <div style="font-family: sans-serif; max-width: 480px; margin: 0 auto;">
+          <p><strong>From:</strong> ${name} (${email})</p>
+          <p><strong>Subject:</strong> ${subject}</p>
+          <hr />
+          <p>${message.replace(/\n/g, "<br/>")}</p>
+        </div>
+      `,
+    });
+    return true;
+  } catch (error) {
+    console.error("Failed to send support request email:", error.response?.data || error.message);
+    return false;
+  }
+}
+
+module.exports = { sendVerificationEmail, sendRechargeNotificationEmail, sendSupportRequestEmail };

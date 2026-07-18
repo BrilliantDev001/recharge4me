@@ -3,8 +3,9 @@ import DashboardLayout from "../../components/layout/DashboardLayout/DashboardLa
 import StatCard from "../../components/common/StatCard/StatCard.jsx";
 import StatusPill from "../../components/common/StatusPill/StatusPill.jsx";
 import Button from "../../components/common/Button/Button.jsx";
-import { useAuth } from "../../context/AuthContext.jsx";
-import { getTransactions, getTransactionStats } from "../../api/client.js";
+import { Link } from 'react-router-dom'
+import { useAuth } from '../../context/AuthContext.jsx'
+import { getTransactions, getTransactionStats } from '../../api/client.js'
 import "./Transactions.css";
 
 const TYPE_ICONS = {
@@ -435,8 +436,8 @@ function Transactions() {
             &copy; {new Date().getFullYear()} Recharge4Me. All rights reserved.
           </p>
           <div className="txn-footer__links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms-of-service">Terms of Service</Link>
           </div>
         </footer>
       </div>

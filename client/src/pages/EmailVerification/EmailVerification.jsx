@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import AuthLayout from "../../components/layout/AuthLayout/AuthLayout.jsx";
 import Button from "../../components/common/Button/Button.jsx";
 import TextField from "../../components/common/TextField/TextField.jsx";
@@ -101,7 +101,7 @@ function EmailVerification() {
           )}
 
           <p className="ev-help">
-            Need help? <a href="#">Contact Support</a>
+            Need help? <Link to="/support">Contact Support</Link>
           </p>
         </div>
       </AuthLayout>
@@ -197,7 +197,7 @@ function EmailVerification() {
         </Button>
 
         <p className="ev-help">
-          Need help? <a href="#">Contact Support</a>
+          Need help? <Link to="/support">Contact Support</Link>
         </p>
       </div>
 

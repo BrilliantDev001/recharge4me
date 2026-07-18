@@ -10,6 +10,9 @@ import Settings from "./pages/Settings/Settings.jsx";
 import Transactions from "./pages/Transactions/Transactions.jsx";
 import PublicRechargePage from "./pages/PublicRechargePage/PublicRechargePage.jsx";
 import PaymentSuccess from "./pages/PaymentSuccess/PaymentSuccess.jsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy/PrivacyPolicy.jsx";
+import TermsOfService from "./pages/TermsOfService/TermsOfService.jsx";
+import Support from "./pages/Support/Support.jsx";
 import ProtectedRoute from "./routes/ProtectedRoute.jsx";
 
 function App() {
@@ -54,6 +57,9 @@ function App() {
       />
       <Route path="/u/:username" element={<PublicRechargePage />} />
       <Route path="/payment-success" element={<PaymentSuccess />} />
+      <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="/terms-of-service" element={<TermsOfService />} />
+      <Route path="/support" element={<Support />} />
       <Route
         path="*"
         element={

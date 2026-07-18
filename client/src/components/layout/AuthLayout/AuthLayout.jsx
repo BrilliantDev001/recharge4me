@@ -53,8 +53,8 @@ function AuthLayout({ topLabel, showBackArrow = true, logoPosition = 'right', ch
         <div className="container auth-footer__inner">
           <p>&copy; {new Date().getFullYear()} Recharge4Me Inc. All rights reserved.</p>
           <div className="auth-footer__links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
+            <Link to="/privacy-policy">Privacy Policy</Link>
+            <Link to="/terms-of-service">Terms of Service</Link>
           </div>
         </div>
       </footer>

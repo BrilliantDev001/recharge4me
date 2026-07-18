@@ -6,7 +6,8 @@ import TrendChart from "../../components/common/TrendChart/TrendChart.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { getDashboardData } from "../../api/client.js";
 import { getPublicLinkUrl, getPublicLinkDisplay } from "../../utils/link.js";
-import QrCodeModal from "../../components/common/QrCodeModal/QrCodeModal.jsx";
+import QrCodeModal from '../../components/common/QrCodeModal/QrCodeModal.jsx'
+import { Link } from 'react-router-dom';
 import {
   QUICK_INSIGHTS,
   QUICK_ACTIONS,
@@ -400,7 +401,12 @@ function Dashboard() {
                     />
                   </svg>
                 </button>
-                <button type="button" className="db-linkcard__icon-btn" onClick={() => setIsQrOpen(true)} aria-label="Show QR code">
+                <button
+                  type="button"
+                  className="db-linkcard__icon-btn"
+                  onClick={() => setIsQrOpen(true)}
+                  aria-label="Show QR code"
+                >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                     <rect
                       x="3"
@@ -456,8 +462,8 @@ function Dashboard() {
                 </svg>
                 Preview Public Page
               </a>
-              <span aria-hidden="true">|</span>
-              <a href="#">Edit Customization</a>
+              {/* <span aria-hidden="true">|</span> */}
+              {/* <a href="#">Edit Customization</a> */}
             </div>
           </section>
 
@@ -516,9 +522,9 @@ function Dashboard() {
                   Latest contributions to your balance
                 </p>
               </div>
-              <a href="/transactions" className="db-table-card__view-all">
+              <Link to="/transactions" className="db-table-card__view-all">
                 View All Transactions
-              </a>
+              </Link>
             </div>
 
             <div className="db-table__scroll">
@@ -605,9 +611,9 @@ function Dashboard() {
           <section className="hide-desktop">
             <div className="db-section-header-row">
               <p className="db-section-label">Recent Activity</p>
-              <a href="#" className="db-view-all-link">
+              <Link to="/transactions" className="db-view-all-link">
                 View All
-              </a>
+              </Link>
             </div>
             <div className="db-activity-list">
               {RECENT_ACTIVITY_MOBILE.map((item) => (
@@ -696,9 +702,9 @@ function Dashboard() {
                   type="button"
                   className="db-quick-action-tile"
                   onClick={
-                    action.id === 'qa-copy'
+                    action.id === "qa-copy"
                       ? handleCopyLink
-                      : action.id === 'qa-qr'
+                      : action.id === "qa-qr"
                         ? () => setIsQrOpen(true)
                         : undefined
                   }
@@ -744,13 +750,16 @@ function Dashboard() {
           &copy; {new Date().getFullYear()} Recharge4Me. All rights reserved.
         </p>
         <div className="db-footer__links">
-          <a href="#">Support Center</a>
-          <a href="#">Privacy Policy</a>
+          <Link to="/support">Support Center</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link>
         </div>
       </footer>
 
       {isQrOpen && (
-        <QrCodeModal url={getPublicLinkUrl(user?.username)} onClose={() => setIsQrOpen(false)} />
+        <QrCodeModal
+          url={getPublicLinkUrl(user?.username)}
+          onClose={() => setIsQrOpen(false)}
+        />
       )}
     </DashboardLayout>
   );

@@ -74,3 +74,6 @@ export const updateNotificationPrefs = (payload) => request('/settings/notificat
 export const getNotifications = () => request('/notifications')
 export const markNotificationRead = (id) => request(`/notifications/${id}/read`, { method: 'PATCH' })
 export const markAllNotificationsRead = () => request('/notifications/all/read', { method: 'PATCH' })
+
+// ---------- Support ----------
+export const submitSupportRequest = (payload) => request('/support', { method: 'POST', body: payload, auth: false })

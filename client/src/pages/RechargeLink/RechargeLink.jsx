@@ -8,7 +8,8 @@ import TrendChart from '../../components/common/TrendChart/TrendChart.jsx'
 import { useAuth } from '../../context/AuthContext.jsx'
 import { getMyLink, updateLinkSettings } from '../../api/client.js'
 import { getPublicLinkUrl, getPublicLinkDisplay } from "../../utils/link.js";
-import { QRCodeCanvas } from "qrcode.react";
+import { QRCodeCanvas } from 'qrcode.react'
+import { Link } from 'react-router-dom';
 import { LINK_QUICK_STATS_MOBILE, ENGAGEMENT_TIMELINE } from '../../data/dashboardContent.js'
 import './RechargeLink.css'
 
@@ -421,9 +422,9 @@ function RechargeLink() {
           <section className="hide-desktop">
             <div className="rl-section-header-row">
               <p className="rl-section-title">Quick Statistics</p>
-              <a href="#" className="rl-detailed-link">
+              <Link to="/transactions" className="rl-detailed-link">
                 Detailed View
-              </a>
+              </Link>
             </div>
             <div className="rl-mobile-stats-grid">
               {LINK_QUICK_STATS_MOBILE.map((stat) => (

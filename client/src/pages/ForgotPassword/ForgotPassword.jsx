@@ -187,11 +187,11 @@ function ForgotPassword() {
 
       {/* ---------- Desktop-only sub-footer ---------- */}
       <div className="fp-links-row hide-mobile">
-        <a href="#">Privacy Policy</a>
+        <Link to="/privacy-policy">Privacy Policy</Link>
         <span className="fp-links-dot" aria-hidden="true" />
-        <a href="#">Terms of Service</a>
+        <Link to="/terms-of-service">Terms of Service</Link>
         <span className="fp-links-dot" aria-hidden="true" />
-        <a href="#">Help Center</a>
+        <Link to="/support">Help Center</Link>
       </div>
       <p className="fp-recaptcha-note hide-mobile">
         Protected by reCAPTCHA. The Google Privacy Policy and Terms of Service apply.

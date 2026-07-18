@@ -358,8 +358,9 @@ function Signup() {
               }}
               label={
                 <>
-                  I agree to the <a href="#">Terms of Service</a> and{" "}
-                  <a href="#">Privacy Policy</a>.
+                  I agree to the{" "}
+                  <Link to="/terms-of-service">Terms of Service</Link> and{" "}
+                  <Link to="/privacy-policy">Privacy Policy</Link>.
                 </>
               }
             />
