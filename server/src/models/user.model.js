@@ -27,6 +27,11 @@ const userSchema = new mongoose.Schema(
     profileMessage: { type: String, default: "Thanks for supporting me" },
     avatar: { type: String, default: "/images/default-avatar.png" },
     isVerified: { type: Boolean, default: false, },
+    network: {
+      type: String,
+      enum: ["MTN", "Airtel", "Glo", "9mobile", null],
+      default: null,
+    },
     emailVerificationToken: { type: String, default: null, select: false },
     emailVerificationExpires: { type: Date, default: null, select: false },
     role: { type: String, enum: ["user", "admin"], default: "user" },

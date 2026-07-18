@@ -9,6 +9,7 @@ const transactionSchema = new mongoose.Schema(
     },
     sponsorName: { type: String, default: "Anonymous Sponsor", trim: true },
     isAnonymous: { type: Boolean, default: false },
+    sponsorMessage: { type: String, default: "", trim: true, maxlength: 200 },
     recipientPhone: { type: String, required: true },
     type: { type: String, enum: ["Airtime", "Data"], required: true },
     network: {

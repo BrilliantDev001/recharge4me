@@ -602,3 +602,12 @@
     grid-template-columns: 1fr 1fr;
   }
 }
+
+.settings-network-select {
+  margin-top: 0.4rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-sm, 6px);
+}

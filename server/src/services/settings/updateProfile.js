@@ -1,7 +1,13 @@
 const User = require("../../models/user.model");
 
+const VALID_NETWORKS = ["MTN", "Airtel", "Glo", "9mobile"];
+
 const updateProfile = async (userId, updates) => {
-  const allowedFields = ["name", "phone", "profileMessage", "avatar"];
+  const allowedFields = ["name", "phone", "profileMessage", "avatar", "network"];
+
+  if (updates.network && !VALID_NETWORKS.includes(updates.network)) {
+    throw new Error("Please select a valid network.");
+  }
   const payload = {};
 
   for (const field of allowedFields) {

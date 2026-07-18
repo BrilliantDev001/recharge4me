@@ -271,3 +271,48 @@
   font-size: 10px;
   color: var(--color-text-secondary);
 }
+
+.prp-profile-message {
+  font-size: 0.85rem;
+  font-style: italic;
+  color: var(--color-text-secondary, #6b7280);
+  text-align: center;
+  margin-top: 0.5rem;
+  max-width: 280px;
+}
+
+.prp-network-display {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--color-bg-subtle, #f9fafb);
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md, 10px);
+  padding: 0.75rem 1rem;
+  font-size: 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.prp-anonymous-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  margin: 0.75rem 0 1rem;
+  cursor: pointer;
+}
+
+.prp-text-input {
+  width: 100%;
+  font-family: inherit;
+  font-size: 0.9rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--color-border-default);
+  border-radius: var(--radius-md, 10px);
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.prp-message-input {
+  resize: vertical;
+}

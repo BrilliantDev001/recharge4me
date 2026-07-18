@@ -35,6 +35,7 @@ function Settings() {
     smsAlerts: false,
     marketingEmails: false,
   })
+  const [network, setNetwork] = useState('')
   const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
   const [toast, setToast] = useState('')
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
@@ -50,6 +51,7 @@ function Settings() {
           headline: fetched.profileMessage || '',
         })
         if (fetched.notificationPrefs) setNotifPrefs(fetched.notificationPrefs)
+        setNetwork(fetched.network || '')
         if (fetched.avatar && !fetched.avatar.startsWith('/images/')) setAvatarUrl(fetched.avatar)
       })
       .catch(() => {})
@@ -78,6 +80,18 @@ function Settings() {
       })
       setProfileUser(updated)
       showToast('Profile updated successfully.')
+    } catch (error) {
+      showToast(error.message)
+    }
+  }
+
+  const handleNetworkChange = async (e) => {
+    const newNetwork = e.target.value
+    setNetwork(newNetwork)
+    try {
+      const { user: updated } = await updateProfile({ network: newNetwork })
+      setProfileUser(updated)
+      showToast('Network updated successfully.')
     } catch (error) {
       showToast(error.message)
     }
@@ -318,6 +332,28 @@ function Settings() {
                       </svg>
                       Primary
                     </span>
+                  </div>
+
+                  <div className="settings-contact-row">
+                    <span className="settings-contact-row__icon settings-contact-row__icon--secondary">
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+                        <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
+                        <path d="M3 12h18M12 3c2.5 2.7 2.5 14.3 0 18M12 3c-2.5 2.7-2.5 14.3 0 18" stroke="currentColor" strokeWidth="1.5" />
+                      </svg>
+                    </span>
+                    <div className="settings-contact-row__text">
+                      <p className="settings-contact-row__label">Network Provider</p>
+                      <p className="settings-contact-row__subtext">
+                        Auto-detected from your number. If you've ported to a different network, update it here.
+                      </p>
+                      <select value={network} onChange={handleNetworkChange} className="settings-network-select">
+                        <option value="">Not set</option>
+                        <option value="MTN">MTN</option>
+                        <option value="Airtel">Airtel</option>
+                        <option value="Glo">Glo</option>
+                        <option value="9mobile">9mobile</option>
+                      </select>
+                    </div>
                   </div>
                 </section>
               </>

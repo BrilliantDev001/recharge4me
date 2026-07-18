@@ -10,7 +10,11 @@ const generateReference = () =>
   `R4M-${crypto.randomBytes(6).toString("hex").toUpperCase()}`;
 
 const submitRecharge = async (username, payload) => {
-  const { amount, network, type, sponsorName, isAnonymous } = payload;
+  // NOTE: network is intentionally NOT accepted from the sponsor here —
+  // it's determined entirely by the recipient's own stored profile, so
+  // there's no picker to guess from and no way for a request to spoof
+  // a different network than the recipient's real one.
+  const { amount, type, sponsorName, sponsorMessage, isAnonymous } = payload;
 
   const numericAmount = Number(amount);
 
@@ -25,6 +29,12 @@ const submitRecharge = async (username, payload) => {
   const user = await User.findOne({ username });
   if (!user) {
     throw new Error("This recharge link does not exist.");
+  }
+
+  if (!user.network) {
+    throw new Error(
+      "This user hasn't confirmed their network yet. Please check back shortly.",
+    );
   }
 
   const link = await RechargeLink.findOneAndUpdate(
@@ -54,9 +64,10 @@ const submitRecharge = async (username, payload) => {
       ? "Anonymous Sponsor"
       : sponsorName || "Anonymous Sponsor",
     isAnonymous: Boolean(isAnonymous),
+    sponsorMessage: sponsorMessage?.slice(0, 200) || "",
     recipientPhone: user.phone,
     type,
-    network,
+    network: user.network,
     quantity: numericAmount,
     quantityUnit: "NGN",
     valueNaira: numericAmount,
@@ -64,8 +75,6 @@ const submitRecharge = async (username, payload) => {
     reference,
   });
 
-  // NOTE: placeholder email — no sponsor-email field on the public page
-  // yet. Fine for processing the payment; just means no receipt email.
   const placeholderEmail = `sponsor+${reference}@example.com`;
 
   const { authorization_url } = await initializeTransaction({

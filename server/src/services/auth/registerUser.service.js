@@ -2,6 +2,7 @@ const User = require("../../models/user.model");
 const bcrypt = require("bcrypt");
 const { generateVerificationToken } = require("../../utils/generateToken");
 const { sendVerificationEmail } = require("../../utils/mailer");
+const { detectNetworkFromPhone } = require("../../utils/detectNetwork");
 
 const NIGERIAN_PHONE_REGEX = /^(0|\+234)[789][01]\d{8}$/;
 
@@ -38,6 +39,7 @@ const NIGERIAN_PHONE_REGEX = /^(0|\+234)[789][01]\d{8}$/;
     email,
     phone,
     password: hashedPassword,
+    network: detectNetworkFromPhone(phone),
   });
 
   const { rawToken, hashedToken, expiresAt } = generateVerificationToken();

@@ -11,9 +11,23 @@ const paystackWebhookController = require("./controllers/webhooks/paystackWebhoo
 
 const app = express();
 
+const isDevelopment = process.env.NODE_ENV !== "production";
+
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // non-browser requests (e.g. Postman)
+
+      if (isDevelopment && /^http:\/\/localhost:\d+$/.test(origin)) {
+        return callback(null, true); // any localhost port during local dev
+      }
+
+      if (origin === process.env.CLIENT_URL) {
+        return callback(null, true);
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   }),
 );
