@@ -1,6 +1,6 @@
 const Transaction = require("../../models/transaction.model");
 const { verifyTransaction } = require("../../utils/paystack");
-const { purchaseAirtime } = require("../../utils/vtpass");
+const { purchaseAirtime, purchaseData } = require("../../utils/vtpass");
 const notifyRecharge = require("../notifications/createRechargeNotification");
 
 const VTPASS_SUCCESS_CODE = "000";
@@ -75,12 +75,26 @@ const processPaymentByReference = async (reference) => {
       transaction.vtpassStatus = error.message;
     }
   } else {
-    // Data bundles: deferred, as discussed — VTpass needs a specific
-    // variation_code per bundle, which needs a frontend bundle-picker
-    // we haven't built yet. Payment is real; delivery is simulated.
-    transaction.status = "success";
-    transaction.vtpassStatus = "simulated-data-not-yet-integrated";
-    transaction.deliveredAt = new Date();
+    try {
+      const { requestId, data } = await purchaseData({
+        network: transaction.network,
+        phone: transaction.recipientPhone,
+        variationCode: transaction.variationCode,
+      });
+
+      transaction.vtpassRequestId = requestId;
+      transaction.vtpassStatus = data.code;
+
+      if (data.code === VTPASS_SUCCESS_CODE) {
+        transaction.status = "success";
+        transaction.deliveredAt = new Date();
+      } else {
+        transaction.status = "delivery_failed";
+      }
+    } catch (error) {
+      transaction.status = "delivery_failed";
+      transaction.vtpassStatus = error.message;
+    }
   }
 
   await transaction.save();

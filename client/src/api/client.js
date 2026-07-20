@@ -55,8 +55,11 @@ export const submitRecharge = (username, payload) =>
     body: payload,
     auth: false,
   });
+
 export const verifyPayment = (reference) =>
   request(`/transactions/verify/${reference}`, { auth: false });
+export const getDataBundles = (username) =>
+  request(`/recharge/public/${username}/data-bundles`, { auth: false });
 
 // ---------- Transactions ----------
 export const getTransactions = (params = {}) => {
@@ -66,14 +69,19 @@ export const getTransactions = (params = {}) => {
 export const getTransactionStats = () => request("/transactions/stats");
 
 // ---------- Settings ----------
-export const getProfile = () => request('/settings/profile')
-export const updateProfile = (payload) => request('/settings/profile', { method: 'PATCH', body: payload })
-export const updateNotificationPrefs = (payload) => request('/settings/notifications', { method: 'PATCH', body: payload })
+export const getProfile = () => request("/settings/profile");
+export const updateProfile = (payload) =>
+  request("/settings/profile", { method: "PATCH", body: payload });
+export const updateNotificationPrefs = (payload) =>
+  request("/settings/notifications", { method: "PATCH", body: payload });
 
 // ---------- Notifications ----------
-export const getNotifications = () => request('/notifications')
-export const markNotificationRead = (id) => request(`/notifications/${id}/read`, { method: 'PATCH' })
-export const markAllNotificationsRead = () => request('/notifications/all/read', { method: 'PATCH' })
+export const getNotifications = () => request("/notifications");
+export const markNotificationRead = (id) =>
+  request(`/notifications/${id}/read`, { method: "PATCH" });
+export const markAllNotificationsRead = () =>
+  request("/notifications/all/read", { method: "PATCH" });
 
 // ---------- Support ----------
-export const submitSupportRequest = (payload) => request('/support', { method: 'POST', body: payload, auth: false })
+export const submitSupportRequest = (payload) =>
+  request("/support", { method: "POST", body: payload, auth: false });

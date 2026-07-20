@@ -3,6 +3,7 @@ const User = require("../../models/user.model");
 const RechargeLink = require("../../models/rechargeLink.model");
 const Transaction = require("../../models/transaction.model");
 const { initializeTransaction } = require("../../utils/paystack");
+const { getDataVariations } = require("../../utils/vtpass");
 
 const MIN_RECHARGE_AMOUNT = 100;
 
@@ -10,17 +11,14 @@ const generateReference = () =>
   `R4M-${crypto.randomBytes(6).toString("hex").toUpperCase()}`;
 
 const submitRecharge = async (username, payload) => {
-  // NOTE: network is intentionally NOT accepted from the sponsor here —
-  // it's determined entirely by the recipient's own stored profile, so
-  // there's no picker to guess from and no way for a request to spoof
-  // a different network than the recipient's real one.
-  const { amount, type, sponsorName, sponsorMessage, isAnonymous } = payload;
-
-  const numericAmount = Number(amount);
-
-  if (!numericAmount || numericAmount < MIN_RECHARGE_AMOUNT) {
-    throw new Error(`Minimum recharge amount is ₦${MIN_RECHARGE_AMOUNT}.`);
-  }
+  const {
+    amount,
+    type,
+    variationCode,
+    sponsorName,
+    sponsorMessage,
+    isAnonymous,
+  } = payload;
 
   if (!["Airtime", "Data"].includes(type)) {
     throw new Error("Invalid recharge type.");
@@ -46,14 +44,46 @@ const submitRecharge = async (username, payload) => {
     throw new Error("This recharge link is currently inactive.");
   }
 
-  if (type === "Data" && !link.allowDataBundles) {
-    throw new Error(
-      "This user is not currently accepting data bundle recharges.",
-    );
-  }
-
   if (isAnonymous && !link.allowAnonymousSponsors) {
     throw new Error("This user requires sponsors to identify themselves.");
+  }
+
+  let finalAmount;
+  let variationLabel = null;
+
+  if (type === "Data") {
+    if (!link.allowDataBundles) {
+      throw new Error(
+        "This user is not currently accepting data bundle recharges.",
+      );
+    }
+    if (!variationCode) {
+      throw new Error("Please select a data bundle.");
+    }
+
+    // Authoritative price lookup — never trust a price the client
+    // sends for a data bundle, same principle as everything else
+    // we've built. The variationCode must genuinely exist for this
+    // user's real network, and its real current price is what gets
+    // charged, not whatever the request claims.
+    const availableBundles = await getDataVariations(user.network);
+    const matchedBundle = availableBundles.find(
+      (b) => b.code === variationCode,
+    );
+
+    if (!matchedBundle) {
+      throw new Error(
+        "That data bundle is no longer available. Please pick another.",
+      );
+    }
+
+    finalAmount = matchedBundle.price;
+    variationLabel = matchedBundle.label;
+  } else {
+    finalAmount = Number(amount);
+    if (!finalAmount || finalAmount < MIN_RECHARGE_AMOUNT) {
+      throw new Error(`Minimum recharge amount is ₦${MIN_RECHARGE_AMOUNT}.`);
+    }
   }
 
   const reference = generateReference();
@@ -68,9 +98,11 @@ const submitRecharge = async (username, payload) => {
     recipientPhone: user.phone,
     type,
     network: user.network,
-    quantity: numericAmount,
+    quantity: finalAmount,
     quantityUnit: "NGN",
-    valueNaira: numericAmount,
+    valueNaira: finalAmount,
+    variationCode: type === "Data" ? variationCode : null,
+    variationLabel,
     status: "pending",
     reference,
   });
@@ -79,7 +111,7 @@ const submitRecharge = async (username, payload) => {
 
   const { authorization_url } = await initializeTransaction({
     email: placeholderEmail,
-    amountNaira: numericAmount,
+    amountNaira: finalAmount,
     reference,
     callbackUrl: `${process.env.CLIENT_URL}/payment-success?reference=${reference}`,
   });

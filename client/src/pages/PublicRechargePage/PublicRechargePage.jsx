@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import PublicPageLayout from "../../components/layout/PublicPageLayout/PublicPageLayout.jsx";
-import { getPublicLink, submitRecharge } from "../../api/client.js";
+import {
+  getPublicLink,
+  submitRecharge,
+  getDataBundles,
+} from "../../api/client.js";
 import {
   PRESET_AMOUNTS,
   MIN_RECHARGE_AMOUNT,
@@ -16,6 +20,10 @@ function PublicRechargePage() {
   const [loadError, setLoadError] = useState("");
   const [rechargeType, setRechargeType] = useState("airtime");
   const [amount, setAmount] = useState(String(PRESET_AMOUNTS[2]));
+  const [dataBundles, setDataBundles] = useState([]);
+  const [selectedBundle, setSelectedBundle] = useState(null);
+  const [bundlesError, setBundlesError] = useState("");
+  const [isLoadingBundles, setIsLoadingBundles] = useState(false);
   const [sponsorName, setSponsorName] = useState("");
   const [sponsorMessage, setSponsorMessage] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
@@ -28,6 +36,16 @@ function PublicRechargePage() {
       .catch((error) => setLoadError(error.message));
   }, [username]);
 
+  useEffect(() => {
+    if (rechargeType !== "data" || dataBundles.length > 0) return;
+
+    setIsLoadingBundles(true);
+    getDataBundles(username)
+      .then((data) => setDataBundles(data.bundles))
+      .catch((error) => setBundlesError(error.message))
+      .finally(() => setIsLoadingBundles(false));
+  }, [rechargeType, username, dataBundles.length]);
+
   const handleAmountInput = (e) => {
     const value = e.target.value.replace(/[^\d]/g, "");
     setAmount(value);
@@ -35,8 +53,13 @@ function PublicRechargePage() {
   };
 
   const handleRecharge = async () => {
+    if (rechargeType === "data" && !selectedBundle) {
+      setAmountError("Please select a data bundle.");
+      return;
+    }
+
     const numericAmount = parseInt(amount, 10) || 0;
-    if (numericAmount < MIN_RECHARGE_AMOUNT) {
+    if (rechargeType === "airtime" && numericAmount < MIN_RECHARGE_AMOUNT) {
       setAmountError(`Minimum recharge amount is ₦${MIN_RECHARGE_AMOUNT}.`);
       return;
     }
@@ -45,10 +68,14 @@ function PublicRechargePage() {
 
     try {
       // NOTE: no network is sent here — the backend uses the recipient's
-      // own stored, verified network. Nothing here to guess or spoof.
+      // own stored, verified network. For Data, the price also isn't
+      // sent — only the bundle's code; the backend looks up the real
+      // authoritative price itself.
       const result = await submitRecharge(username, {
-        amount: numericAmount,
+        amount: rechargeType === "airtime" ? numericAmount : undefined,
         type: rechargeType === "airtime" ? "Airtime" : "Data",
+        variationCode:
+          rechargeType === "data" ? selectedBundle.code : undefined,
         isAnonymous,
         sponsorName: isAnonymous ? "" : sponsorName.trim(),
         sponsorMessage: sponsorMessage.trim(),
@@ -145,7 +172,10 @@ function PublicRechargePage() {
               <button
                 type="button"
                 className={`prp-segmented__btn ${rechargeType === "data" ? "prp-segmented__btn--active" : ""}`}
-                onClick={() => setRechargeType("data")}
+                onClick={() => {
+                  setRechargeType("data");
+                  setAmountError("");
+                }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path
@@ -161,39 +191,75 @@ function PublicRechargePage() {
             )}
           </div>
 
-          <div className="prp-amount-header">
-            <p className="prp-form-label">Amount</p>
-            <p className="prp-min-label">Min: ₦{MIN_RECHARGE_AMOUNT}</p>
-          </div>
-          <div
-            className={`prp-amount-input ${amountError ? "prp-amount-input--error" : ""}`}
-          >
-            <span>₦</span>
-            <input
-              type="text"
-              inputMode="numeric"
-              value={amount}
-              onChange={handleAmountInput}
-              aria-label="Custom amount"
-            />
-          </div>
-          {amountError && <p className="prp-amount-error">{amountError}</p>}
-
-          <div className="prp-preset-row">
-            {PRESET_AMOUNTS.map((preset) => (
-              <button
-                key={preset}
-                type="button"
-                className={`prp-preset-chip ${amount === String(preset) ? "prp-preset-chip--active" : ""}`}
-                onClick={() => {
-                  setAmount(String(preset));
-                  setAmountError("");
-                }}
+          {rechargeType === "airtime" ? (
+            <>
+              <div className="prp-amount-header">
+                <p className="prp-form-label">Amount</p>
+                <p className="prp-min-label">Min: ₦{MIN_RECHARGE_AMOUNT}</p>
+              </div>
+              <div
+                className={`prp-amount-input ${amountError ? "prp-amount-input--error" : ""}`}
               >
-                ₦{preset}
-              </button>
-            ))}
-          </div>
+                <span>₦</span>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  value={amount}
+                  onChange={handleAmountInput}
+                  aria-label="Custom amount"
+                />
+              </div>
+              {amountError && <p className="prp-amount-error">{amountError}</p>}
+
+              <div className="prp-preset-row">
+                {PRESET_AMOUNTS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    className={`prp-preset-chip ${amount === String(preset) ? "prp-preset-chip--active" : ""}`}
+                    onClick={() => {
+                      setAmount(String(preset));
+                      setAmountError("");
+                    }}
+                  >
+                    ₦{preset}
+                  </button>
+                ))}
+              </div>
+            </>
+          ) : (
+            <>
+              <p className="prp-form-label">Choose a Data Bundle</p>
+              {isLoadingBundles && (
+                <p className="prp-bundle-status">Loading available bundles…</p>
+              )}
+              {bundlesError && (
+                <p className="prp-amount-error">{bundlesError}</p>
+              )}
+              {amountError && <p className="prp-amount-error">{amountError}</p>}
+
+              <div className="prp-bundle-list">
+                {dataBundles.map((bundle) => (
+                  <button
+                    key={bundle.code}
+                    type="button"
+                    className={`prp-bundle-option ${selectedBundle?.code === bundle.code ? "prp-bundle-option--active" : ""}`}
+                    onClick={() => {
+                      setSelectedBundle(bundle);
+                      setAmountError("");
+                    }}
+                  >
+                    <span className="prp-bundle-option__label">
+                      {bundle.label}
+                    </span>
+                    <span className="prp-bundle-option__price">
+                      ₦{bundle.price.toLocaleString()}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </>
+          )}
 
           {linkData?.allowAnonymousSponsors && (
             <label className="prp-anonymous-toggle">

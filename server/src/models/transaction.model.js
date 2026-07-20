@@ -10,6 +10,8 @@ const transactionSchema = new mongoose.Schema(
     sponsorName: { type: String, default: "Anonymous Sponsor", trim: true },
     isAnonymous: { type: Boolean, default: false },
     sponsorMessage: { type: String, default: "", trim: true, maxlength: 200 },
+    variationCode: { type: String, default: null }, // Data bundles only
+    variationLabel: { type: String, default: null }, // e.g. "N1000 1.5GB - 30 days"
     recipientPhone: { type: String, required: true },
     type: { type: String, enum: ["Airtime", "Data"], required: true },
     network: {
